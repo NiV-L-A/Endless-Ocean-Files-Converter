@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndlessOceanMDLToOBJExporter", "EndlessOceanMDLToOBJExporter\EndlessOceanMDLToOBJExporter.csproj", "{53E880F9-0888-4ED1-90AB-13E909468FDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53E880F9-0888-4ED1-90AB-13E909468FDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E880F9-0888-4ED1-90AB-13E909468FDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E880F9-0888-4ED1-90AB-13E909468FDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E880F9-0888-4ED1-90AB-13E909468FDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1DF5B4E-11DE-44F9-90CE-AA476A056A3B}
+	EndGlobalSection
+EndGlobal

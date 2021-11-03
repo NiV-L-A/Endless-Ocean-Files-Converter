@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "30g8H94U0QXY5bsNSYaHVS7B1FeyjYwjxZtcQ7c296SPkZn5lmcEVcnPbUNYTAHZDdJ8PWsCZDK3Dab3L4gRSg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Roberto\\source\\repos\\Endless-Ocean-MDL-to-OBJ-0.6\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Roberto\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk\\4.6.7\\opentk.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.compute\\4.6.7\\opentk.compute.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.core\\4.6.7\\opentk.core.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.graphics\\4.6.7\\opentk.graphics.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.input\\4.6.7\\opentk.input.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.mathematics\\4.6.7\\opentk.mathematics.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.openal\\4.6.7\\opentk.openal.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.redist.glfw\\3.3.0-pre20200830200122\\opentk.redist.glfw.3.3.0-pre20200830200122.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.windowing.common\\4.6.7\\opentk.windowing.common.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.windowing.desktop\\4.6.7\\opentk.windowing.desktop.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.6.7\\opentk.windowing.graphicslibraryframework.4.6.7.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\system.drawing.common\\5.0.2\\system.drawing.common.5.0.2.nupkg.sha512",
+    "C:\\Users\\Roberto\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
