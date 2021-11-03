@@ -1,5 +1,5 @@
 ## INFO ##
-Endless Ocean 1 & 2 .mdl to .obj Exporter
+aEndless Ocean 1 & 2 .mdl to .obj Exporter
 Author: NiV
 Special thanks to Hiroshi & MDB
 Current version: 1.6
