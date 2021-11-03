@@ -500,11 +500,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Roberto\\source\\repos\\Endless-Ocean-MDL-to-OBJ-0.6\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
+      "projectUniqueName": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
       "projectName": "EndlessOceanMDLToOBJExporter",
-      "projectPath": "C:\\Users\\Roberto\\source\\repos\\Endless-Ocean-MDL-to-OBJ-0.6\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
+      "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
       "packagesPath": "C:\\Users\\Roberto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Roberto\\source\\repos\\Endless-Ocean-MDL-to-OBJ-0.6\\EndlessOceanMDLToOBJExporter\\obj\\",
+      "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Roberto\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "30g8H94U0QXY5bsNSYaHVS7B1FeyjYwjxZtcQ7c296SPkZn5lmcEVcnPbUNYTAHZDdJ8PWsCZDK3Dab3L4gRSg==",
+  "dgSpecHash": "9mo4BStq8MfRJcs0EzcguvQsajDvOnBKClun56oKS3bI/hq2PkmDsqcullOskPDL7E2NmlJ4808LjwMCqTItbQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Roberto\\source\\repos\\Endless-Ocean-MDL-to-OBJ-0.6\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
+  "projectFilePath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Roberto\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Roberto\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",

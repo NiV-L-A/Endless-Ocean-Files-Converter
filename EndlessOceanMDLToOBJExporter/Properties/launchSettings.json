@@ -1,7 +1,8 @@
 {
   "profiles": {
     "EndlessOceanMDLToOBJExporter": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Roberto\\Desktop\\Endless-Ocean-MDL-to-OBJ-1.0\\eh\\b09stage.mdl"
     }
   }
 }
