@@ -397,7 +397,7 @@ namespace EndlessOceanMDLToOBJExporter
                         x30_ZNormCoordsArray[i] = Vec3VTX.Z;
                     }
 
-                    //Vec3VTX = MeshTransform(flag, Vec3VTX, CorrectionCount);
+                    Vec3VTX = MeshTransform(flag, Vec3VTX, CorrectionCount);
 
                 }
                 else
