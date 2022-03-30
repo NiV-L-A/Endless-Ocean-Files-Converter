@@ -500,9 +500,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
-      "projectName": "EndlessOceanMDLToOBJExporter",
-      "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanMDLToOBJExporter.csproj",
+      "projectUniqueName": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
+      "projectName": "EndlessOceanFilesConverter",
+      "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
       "packagesPath": "C:\\Users\\Roberto\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\",
       "projectStyle": "PackageReference",
@@ -514,7 +514,7 @@
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\Roberto\\Downloads\\Build_x64": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -557,7 +557,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
       }
     }
   }
