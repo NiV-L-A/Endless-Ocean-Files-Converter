@@ -2,12 +2,12 @@
 Endless Ocean Files Converter
 Author: NiV, MDB
 Special thanks to Hiroshi
-Current version: 1.7
+Current version: 1.7.1
 *If you have any issues, join this discord server and contact NiV-L-A: https://discord.gg/4hmcsmPMDG - Endless Ocean Wiki Server
 
 ## Changes ##
 - Better Parsing of the Hierarchy List:
-	- Instantiate the class TDLStream.CHierarchyObject to understand how the list is made.
+	- Instantiate the class MDLStream.CHierarchyObject to understand how the list is made.
 	- Better parsing of x30 Codes (duplicate meshes).
 - Converts .tdl image files to .bmp files (supports file format 0x05 and 0xA).
 	- Implemented the TDLStream.cs file with its classes to parse the .tdl file.
