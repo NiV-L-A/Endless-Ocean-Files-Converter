@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using OpenTK.Mathematics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
+using OpenTK.Mathematics;
 
 namespace EndlessOceanMDLToOBJExporter
 {
@@ -724,7 +724,7 @@ namespace EndlessOceanMDLToOBJExporter
                         bwBMP.Close();
                         fsBMP.Close();
 
-                        ConvertBMPToPNG(BMPFilePath);
+                        //ConvertBMPToPNG(BMPFilePath);
                     }
 
                     if (Path.GetExtension(arg) == ".mdl" && DumpSingleOBJFile)
@@ -1153,7 +1153,7 @@ namespace EndlessOceanMDLToOBJExporter
             PrintCenter("Endless Ocean Files Converter\n");
             PrintCenter("Author: NiV, MDB\n");
             PrintCenter("Special thanks to Hiroshi\n");
-            PrintCenter("Version 1.7\n"); ;
+            PrintCenter("Version 1.7.1\n"); ;
             PrintCenter("If you have any issues, join this discord server and contact NiV-L-A:\n");
             PrintCenter("https://discord.gg/4hmcsmPMDG\n");
         }
