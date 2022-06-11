@@ -10,7 +10,7 @@
 	- Instantiate the class HITStream to parse the .hit file.
 - Parsing of .pak and .txs files. Generic RF Archives. Extract files from the archive.
 	- Possibility of renaming a .mdl to a .pak. The code will treat it as a RF Archive and extract its contents.
-		- Example: renaming b00stage.mdl to b00stage.pak. This action will dump the .tdl and .vdl files contained inside b00stage.mdl.
+	- Example: renaming b00stage.mdl to b00stage.pak. This action will dump the .tdl and .vdl files contained inside b00stage.mdl.
 - Changed console output when converting files.
 
 ## Description ##
