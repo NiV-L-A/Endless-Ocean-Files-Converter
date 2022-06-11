@@ -28,6 +28,8 @@
 - To use this tool, drag and drop a single or multiple .mdl, .tdl and/or .bmp files; or a folder containing .mdl, .tdl and/or .bmp files onto the .exe!
 - NOTE: You need .NET Desktop Runtime 5.0 to run this program.
 	- https://dotnet.microsoft.com/en-us/download/dotnet/5.0
+- Parsing of the Endless Ocean 1 main map (stage/sea/s01fNNMM.mdl) requires a special .rtl file to correctly place the meshes. You can download it from here:
+	- https://mega.nz/file/19wSHbhD#X4Z5SU3hq38YoeAc7KhbWn2XE7ijmvgwcnk8RJGgE_E 
 
 ## TO DO: ##
 - 0x50 Codes (duplicate meshes outside of the .mdl, that references other .mdl files: deep hole, weddell sea, north coast of canada, etc...).
