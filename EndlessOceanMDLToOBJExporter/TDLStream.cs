@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EndlessOceanMDLToOBJExporter;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace EndlessOceanMDLToOBJExporter
+namespace EndlessOceanFilesConverter
 {
     public class TDLStream
     {

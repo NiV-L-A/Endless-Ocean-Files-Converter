@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using EndlessOceanMDLToOBJExporter;
 using OpenTK.Mathematics;
 
-namespace EndlessOceanMDLToOBJExporter
+
+namespace EndlessOceanFilesConverter
 {
     class MDLStream
     {

@@ -8,12 +8,14 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
 using OpenTK.Mathematics;
+using System.Threading;
+using System.Globalization;
+using EndlessOceanFilesConverter;
 
 namespace EndlessOceanMDLToOBJExporter
 {
     class Program
     {
-
         public static bool IsRod = false;
         //public static bool Ispmset = false;
         public static bool RF2MD2 = false;
@@ -58,7 +60,10 @@ namespace EndlessOceanMDLToOBJExporter
         public static ushort NextHierarchyObject = 0;
         public static ushort x30IncreaserCounter = 0;
         public static int MeshProgressCount = 0;
-        public static int TextureProgressCount = 0;
+        public static int TDLProgressCount = 0;
+        public static int BMPProgressCount = 0;
+        public static int HITProgressCount = 0;
+        public static int RFProgressCount = 0;
         public static int pos = 0;
         public static int pos2 = 0;
         public static int pos3 = 0;
@@ -118,7 +123,6 @@ namespace EndlessOceanMDLToOBJExporter
         public static float RTLZChunkStart = 0;
         public static string MeshName = "";
         public static string NewPath = "";
-        public static string pathReal = "";
         public static ushort[] MatIndices = null;
         public static float[] XCoordsArray = null;
         public static float[] YCoordsArray = null;
@@ -150,6 +154,7 @@ namespace EndlessOceanMDLToOBJExporter
         static void Main(string[] args)
         {
             Console.Title = "Endless Ocean Files Converter";
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             if (args.Length == 0) //if no args are passed to the .exe
             {
                 PrintInfo();
@@ -164,6 +169,9 @@ namespace EndlessOceanMDLToOBJExporter
                 string[] MDLargs = null;
                 string[] TDLargs = null;
                 string[] BMPargs = null;
+                string[] HITargs = null;
+                string[] PAKargs = null;
+                string[] TXSargs = null;
                 List<string> ListAllFiles = new();
                 Regex rxrod = new(@"^b(\d{2})rod(\d{2})$"); //Regular expression for eo2 rods: bNNrodNN
                 Regex rxs01f = new(@"^s01f(\d{2})(\d{2})$"); //Regular expression for eo1 s01f: s01fNNMM
@@ -179,12 +187,17 @@ namespace EndlessOceanMDLToOBJExporter
                         List<string> MDLListFolder = FindExtInArray(AllFiles, ".mdl");
                         List<string> TDLListFolder = FindExtInArray(AllFiles, ".tdl");
                         List<string> BMPListFolder = FindExtInArray(AllFiles, ".bmp");
+                        List<string> HITListFolder = FindExtInArray(AllFiles, ".hit");
+                        List<string> PAKListFolder = FindExtInArray(AllFiles, ".pak");
+                        List<string> TXSListFolder = FindExtInArray(AllFiles, ".txs");
                         RTLargs = RTLListFolder.ToArray();
                         MDLargs = MDLListFolder.ToArray();
                         TDLargs = TDLListFolder.ToArray();
                         BMPargs = BMPListFolder.ToArray();
-                        ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(BMPargs)).ToList()).ToList();
-                        //ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs).ToList()).ToList();
+                        HITargs = HITListFolder.ToArray();
+                        PAKargs = PAKListFolder.ToArray();
+                        TXSargs = TXSListFolder.ToArray();
+                        ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(BMPargs.Concat(HITargs.Concat(PAKargs.Concat(TXSargs))))).ToList()).ToList();
                     }
                 }
 
@@ -194,12 +207,17 @@ namespace EndlessOceanMDLToOBJExporter
                     List<string> MDLList = FindExtInArray(args, ".mdl");
                     List<string> TDLList = FindExtInArray(args, ".tdl");
                     List<string> BMPList = FindExtInArray(args, ".bmp");
+                    List<string> HITList = FindExtInArray(args, ".hit");
+                    List<string> PAKList = FindExtInArray(args, ".pak");
+                    List<string> TXSList = FindExtInArray(args, ".txs");
                     RTLargs = RTLList.ToArray();
                     MDLargs = MDLList.ToArray();
                     TDLargs = TDLList.ToArray();
                     BMPargs = BMPList.ToArray();
-                    ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(BMPargs)).ToList()).ToList();
-                    //ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs).ToList()).ToList();
+                    HITargs = HITList.ToArray();
+                    PAKargs = PAKList.ToArray();
+                    TXSargs = TXSList.ToArray();
+                    ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(BMPargs.Concat(HITargs.Concat(PAKargs.Concat(TXSargs))))).ToList()).ToList();
                 }
 
                 if (RTLargs != null)
@@ -245,9 +263,9 @@ namespace EndlessOceanMDLToOBJExporter
 
                 foreach (string arg in args) //damn boi, at least one arg, let's see what the script can do
                 {
-                    pathReal = arg;
+                    string ArgExt = Path.GetExtension(arg);
 
-                    if (Path.GetExtension(arg) == ".mdl")
+                    if (ArgExt == ".mdl")
                     {
                         //Handle .mdl
 
@@ -262,7 +280,7 @@ namespace EndlessOceanMDLToOBJExporter
                         RFPMD2 = false;
                         try
                         {
-                            fs = new FileStream(pathReal, FileMode.Open);
+                            fs = new FileStream(arg, FileMode.Open);
                             br = new BinaryReader(fs);
                         }
                         catch (IOException ex)
@@ -359,7 +377,7 @@ namespace EndlessOceanMDLToOBJExporter
 
                         if(DumpSingleOBJFile)
                         {
-                            NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}{Path.GetExtension(arg)}.obj";
+                            NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}{ArgExt}.obj";
                             File.Delete(NewPath);
                             fsNew = File.Open(NewPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
 
@@ -392,12 +410,12 @@ namespace EndlessOceanMDLToOBJExporter
 
                             if (CreateFolder)
                             {
-                                NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}\\{Path.GetFileNameWithoutExtension(arg)}{Path.GetExtension(arg)}_{MeshProgressCount}.obj";
+                                NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}\\{Path.GetFileNameWithoutExtension(arg)}{ArgExt}_{MeshProgressCount}.obj";
                                 fsNew = File.OpenWrite(NewPath);
                             }
                             else if (!DumpSingleOBJFile)
                             {
-                                NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}{Path.GetExtension(arg)}_{MeshProgressCount}.obj";
+                                NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}{ArgExt}_{MeshProgressCount}.obj";
                                 File.Delete(NewPath);
                                 fsNew = File.OpenWrite(NewPath);
                             }
@@ -535,8 +553,8 @@ namespace EndlessOceanMDLToOBJExporter
 
                             TRSMat = CreateTRSMatrixFromHierarchyList(br, (ushort)(MeshProgressCount - 1));
 
-                            info = $"({Path.GetFileNameWithoutExtension(arg)}{Path.GetExtension(arg)}_{MeshProgressCount}_{MeshName})\n";
-                            Console.Write(info);
+                            info = $"({Path.GetFileNameWithoutExtension(arg)}{ArgExt}_{MeshProgressCount}_{MeshName})\n";
+                            //Console.Write(info);
 
                             if (CreateFolder)
                             {
@@ -545,7 +563,7 @@ namespace EndlessOceanMDLToOBJExporter
                             else
                             {
                                 x30FirstLine = fsNew.Position;
-                                info = $"o {$"{Path.GetFileNameWithoutExtension(arg)}{Path.GetExtension(arg)}_{MeshProgressCount}_"}{MeshName}\n";
+                                info = $"o {$"{Path.GetFileNameWithoutExtension(arg)}{ArgExt}_{MeshProgressCount}_"}{MeshName}\n";
                             }
                             WriteText(fsNew, info);
                             XCoordsArray = new float[vtxCount];
@@ -574,7 +592,7 @@ namespace EndlessOceanMDLToOBJExporter
                              * 1st bit = is uv index 2 bytes (in 0xEF, 1st bit is set to 1. Yes, uv index is 2 bytes).
                              * 
                              * 2nd bit = is light data present (in 0xEF, 2nd bit is set to 1. Yes, light data is present).
-                             * 3rd bit = is light index 2 bytes (in 0xEF, 3rd bit is set to 0. No, light data is 1 byte).
+                             * 3rd bit = is light index 2 bytes (in 0xEF, 3rd bit is set to 0. No, light index is 1 byte).
                              * 
                              * 4th bit = is normals data present (in 0xEF, 4th bit is set to 1. Yes, normals data is present).
                              * 5th bit = is normals index 2 bytes (in 0xEF, 5th bit is set to 1. Yes, normals index is 2 bytes).
@@ -591,7 +609,7 @@ namespace EndlessOceanMDLToOBJExporter
                             //*************** VERTICES DATA ***************
                             //*********************************************
 
-                            Console.WriteLine($"\t[Vertices]: 0x{vtxCount:X4}");
+                            //Console.WriteLine($"\t[Vertices]: 0x{vtxCount:X4}");
                             vtxOff += MeshHDRStartOff;
                             br.BaseStream.Seek(vtxOff, SeekOrigin.Begin);
                             LogVtx(fsNew, br, TRSMat);
@@ -600,7 +618,7 @@ namespace EndlessOceanMDLToOBJExporter
                             //*************** NORMALS DATA ***************
                             //********************************************
 
-                            Console.WriteLine($"\t[Normals]: 0x{normCount:X4}");
+                            //Console.WriteLine($"\t[Normals]: 0x{normCount:X4}");
                             normOff += MeshHDRStartOff;
                             br.BaseStream.Seek(normOff, SeekOrigin.Begin); //go to normals offset
                             LogNormals(fsNew, br, TRSMat);
@@ -609,7 +627,7 @@ namespace EndlessOceanMDLToOBJExporter
                             //***************** UVS DATA *****************
                             //********************************************
 
-                            Console.WriteLine($"\t[UVs]: 0x{uvCount:X4}");
+                            //Console.WriteLine($"\t[UVs]: 0x{uvCount:X4}");
                             uvOff += MeshHDRStartOff;
                             br.BaseStream.Seek(uvOff, SeekOrigin.Begin);
                             LogUVs(fsNew, br, TRSMat);
@@ -618,7 +636,7 @@ namespace EndlessOceanMDLToOBJExporter
                             //*************** INDICES DATA ***************
                             //********************************************
 
-                            Console.WriteLine($"\t[Indices]");
+                            //Console.WriteLine($"\t[Indices]");
 
                             /* indunk = unknown 2 bytes
                              * cnt = Sequence Count - It indicates each "fragment".
@@ -648,7 +666,7 @@ namespace EndlessOceanMDLToOBJExporter
                                 fsNew.Close();
                             }
 
-                            Console.WriteLine("#Mesh Ended\n");
+                            //Console.WriteLine("#Mesh Ended\n");
 
                             if (CreateFolder)
                             {
@@ -663,27 +681,27 @@ namespace EndlessOceanMDLToOBJExporter
                             }
                         }
                     }
-                    else if (Path.GetExtension(arg) == ".bmp")
+                    else if (ArgExt == ".bmp")
                     {
                         //Handle .bmp
-                        TextureProgressCount += 1;
+                        BMPProgressCount += 1;
                         narg += 1;
-                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - Texture: {TextureProgressCount}/{BMPargs.Length}";
-                        Console.WriteLine($"{Texturecount + 1} | {Path.GetFileNameWithoutExtension(arg) + Path.GetExtension(arg)}");
+                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - Texture: {BMPProgressCount}/{BMPargs.Length}";
                         Texturecount += 1;
+                        Console.WriteLine($"{Texturecount} | {Path.GetFileNameWithoutExtension(arg) + ArgExt}");
                         ConvertBMPToPNG(arg);
                     }
-                    else if (Path.GetExtension(arg) == ".tdl")
+                    else if (ArgExt == ".tdl")
                     {
                         //Handle .tdl
 
-                        TextureProgressCount += 1;
+                        TDLProgressCount += 1;
                         narg += 1;
-                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - Texture: {TextureProgressCount}/{TDLargs.Length}";
-                        Console.WriteLine($"{Texturecount + 1} | {Path.GetFileNameWithoutExtension(arg) + Path.GetExtension(arg)}");
+                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - Texture: {TDLProgressCount}/{TDLargs.Length}";
                         Texturecount += 1;
+                        Console.WriteLine($"{Texturecount} | {Path.GetFileNameWithoutExtension(arg) + ArgExt}");
 
-                        using FileStream fsTDL = new(pathReal, FileMode.Open);
+                        using FileStream fsTDL = new(arg, FileMode.Open);
                         using BinaryReader brTDL = new(fsTDL);
 
                         //Read .tdl file. Header and Data
@@ -695,7 +713,7 @@ namespace EndlessOceanMDLToOBJExporter
                         using BinaryWriter bwBMP = new(fsBMP);
                         int Blocks = 0;
 
-                        switch(TDLFile.Header.FileHeader.Format) //Possible formats: 10,5,8,1
+                        switch (TDLFile.Header.FileHeader.Format) //Possible formats: 10,5,8,1
                         {
                             case 10:
                                 Blocks = TDLFile.Header.FileHeader.TotalWidth * TDLFile.Header.FileHeader.TotalHeight / 16;
@@ -723,17 +741,107 @@ namespace EndlessOceanMDLToOBJExporter
                         fsBMP.Dispose();
                         bwBMP.Close();
                         fsBMP.Close();
+                    }
+                    else if (ArgExt == ".hit")
+                    {
+                        //Handle .hit
 
-                        //ConvertBMPToPNG(BMPFilePath);
+                        HITProgressCount += 1;
+                        narg += 1;
+                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - Hit: {HITProgressCount}/{HITargs.Length}";
+
+                        string NewPath = $"{arg}.obj";
+                        File.Delete(NewPath);
+                        fsNew = File.Open(NewPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+                        using FileStream fsHIT = new(arg, FileMode.Open);
+                        using BinaryReader brHIT = new(fsHIT);
+                        HITStream HITFile = new(brHIT);
+
+                        if (RTLParsed) //Only if the .rtl was passed in the arguments
+                        {
+                            IsRod = false;
+                            if (rxs01f.IsMatch(Path.GetFileNameWithoutExtension(arg))) //"^s01f(\d{2})(\d{2})$" - s01fNNMM
+                            {
+                                IsRod = true;
+                                ushort CurrQuadrant = (ushort)(Convert.ToUInt16(Path.GetFileNameWithoutExtension(arg).Substring(4, 2), 10) - 1);
+                                ushort CurrID = Convert.ToUInt16(Path.GetFileNameWithoutExtension(arg).Substring(6, 2), 10);
+                                ushort Modifier = Quadrants[CurrQuadrant][CurrID];
+
+                                TransCol = 320f * (0.5f + (Modifier & 0xFF)) - 4000f;
+                                TransRow = 320f * (0.5f + ((Modifier >> 0x8) & 0xFF)) - 3200f;
+                            }
+                        }
+
+                        m = 0;
+                        uint index = 1;
+                        //uint n = 1;
+
+                        for (int i = 0; i < HITFile.Header.ColCount; i++)
+                        {
+                            //ushort ID = HITFile.FBHData.FBHList[m].ID;
+                            //ushort NextColsCount = HITFile.FBHData.FBHList[m].NextColsCount;
+                            int p = 0;
+
+                            HITStream.TransformVertices(HITFile.ColData.HITData[i].Vertices, HITFile.FBHData.FBHList[m].Translation, HITFile.FBHData.FBHList[m].Rotation, IsRod, TransCol, TransRow);
+
+                            if (i == HITFile.FBHData.FBHList[m].ID + HITFile.FBHData.FBHList[m].NextColsCount - 1)
+                            {
+                                m++;
+                            }
+
+                            WriteText(fsNew, $"o {i}_{HITFile.ColData.HITData[i].ColName}\n");
+
+                            for (int k = 0; k < HITFile.ColData.HITData[i].ColInfo.PolyCount; k++)
+                            {
+                                uint VTXCount = HITFile.ColData.HITData[i].PolyInfo[k].VTXCount;
+
+                                WriteText(fsNew, $"#{VTXCount}\n");
+
+                                for (int j = 0; j < VTXCount; j++)
+                                {
+                                    WriteText(fsNew, $"v {HITFile.ColData.HITData[i].Vertices[j + p].X} {HITFile.ColData.HITData[i].Vertices[j + p].Y} {HITFile.ColData.HITData[i].Vertices[j + p].Z}\n");
+                                }
+
+                                p += (int)VTXCount;
+                                VTXCount -= 2;
+
+                                for (int j = 0; j < VTXCount; j++)
+                                {
+                                    WriteText(fsNew, $"f {2 + j + index} {1 + j + index} {index /*n*/}\n"); //lines (l) declarations render in a weird way. Let's keep it to faces (f) for now.
+                                }
+
+                                WriteText(fsNew, "\n");
+
+                                //n += VTXCount + 2;
+                                index += VTXCount + 2;
+                            }
+                        }
+                    }
+                    else if (ArgExt == ".pak" || ArgExt == ".txs") //Generic RF archive.
+                    {
+                        RFProgressCount += 1;
+                        narg += 1;
+                        Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - .pak/.txs: {RFProgressCount}/{PAKargs.Length + TXSargs.Length}";
+
+                        using FileStream fsPAK = new(arg, FileMode.Open);
+                        using BinaryReader brPAK = new(fsPAK);
+
+                        ushort RF = brPAK.ReadUInt16();
+                        byte RFVersion = brPAK.ReadByte();
+                        ushort Type = brPAK.ReadUInt16();
+                        byte TypeVersion = brPAK.ReadByte();
+                        short Entries = brPAK.ReadInt16();
+                        
+                        ExtractFilesFromRFArchive(brPAK, Entries, arg, RFVersion);
                     }
 
-                    if (Path.GetExtension(arg) == ".mdl" && DumpSingleOBJFile)
+                    if ((ArgExt == ".mdl" && DumpSingleOBJFile) || ArgExt == ".hit")
                     {
                         fsNew.Flush();
                         fsNew.Close();
                     }
 
-                    Console.WriteLine("File Ended\n");
+                    Console.WriteLine($"Parsing of \"{arg}\" ended\n");
                 }
             }
             stopWatch.Stop();
@@ -750,13 +858,81 @@ namespace EndlessOceanMDLToOBJExporter
             if (Texturecount > 0)
                 Console.WriteLine($"Total Textures: {Texturecount} [0x{Texturecount:X4}]");
 
+            if (HITProgressCount > 0)
+                Console.WriteLine($"Total Hit: {HITProgressCount} [0x{HITProgressCount:X4}]");
+
+            if (RFProgressCount > 0)
+                Console.WriteLine($"Total .pak/.txs: {RFProgressCount} [0x{RFProgressCount:X4}]");
+
             Console.WriteLine($"Total Meshes: {MeshTotalCount} [0x{MeshTotalCount:X4}]");
 
-            if (StripWithEqualFaceCount != 0)
+            if (StripWithEqualFaceCount > 0)
                 Console.WriteLine($"Face declarations with at least 2 equal face indices: {StripWithEqualFaceCount} [0x{StripWithEqualFaceCount:X4}] (Dumped but commented with #)");
 
             Console.WriteLine("Please, press any key to exit");
             Console.ReadKey();
+        }
+
+        public static void ExtractFilesFromRFArchive(BinaryReader brPAK, short Entries, string arg, byte RFVersion)
+        {
+            brPAK.BaseStream.Seek(0x10, SeekOrigin.Begin);
+
+            string FilePath = $"{Path.GetDirectoryName(arg)}\\{Path.GetFileNameWithoutExtension(arg)}";
+            if (!Directory.Exists(FilePath))
+            {
+                Directory.CreateDirectory(FilePath);
+            }
+
+            if (RFVersion == 0x32)
+            {
+                for (int i = 0; i < Entries; i++)
+                {
+                    string FILENAME = ReadNullTerminatedString(brPAK, 0x14);
+                    int SIZE = brPAK.ReadInt32();
+                    int OFFSET = brPAK.ReadInt32();
+                    brPAK.BaseStream.Seek(0x02, SeekOrigin.Current);
+                    byte IsInFile = brPAK.ReadByte();
+
+                    if (IsInFile == 1)
+                    {
+                        DumpFileFromRF(brPAK, OFFSET, SIZE, FilePath, FILENAME);
+                    }
+
+                    brPAK.BaseStream.Seek(0x10 + ((i + 1) * 0x20), SeekOrigin.Begin);
+                }
+            }
+            else //if (RFVersion == 0x50)
+            {
+                for (int i = 0; i < Entries; i++)
+                {
+                    string FILENAME = ReadNullTerminatedString(brPAK, 0x10);
+                    int OFFSET = brPAK.ReadInt32();
+                    int SIZE = brPAK.ReadInt32();
+                    brPAK.BaseStream.Seek(0x06, SeekOrigin.Current);
+                    byte IsInFile = brPAK.ReadByte();
+
+                    if (IsInFile == 1)
+                    {
+                        DumpFileFromRF(brPAK, OFFSET, SIZE, FilePath, FILENAME);
+                    }
+
+                    brPAK.BaseStream.Seek(0x10 + ((i + 1) * 0x20), SeekOrigin.Begin);
+                }
+            }
+        }
+
+        public static void DumpFileFromRF(BinaryReader brPAK, int OFFSET, int SIZE, string FilePath, string FILENAME)
+        {
+            brPAK.BaseStream.Seek(OFFSET, SeekOrigin.Begin);
+            byte[] arrayFile = brPAK.ReadBytes(SIZE);
+            File.Delete(FilePath + "\\" + FILENAME);
+            using FileStream fsFile = new(FilePath + "\\" + FILENAME, FileMode.OpenOrCreate);
+            using BinaryWriter brFile = new(fsFile);
+            brFile.Write(arrayFile, 0, arrayFile.Length);
+            brFile.Flush();
+            brFile.Dispose();
+            fsFile.Dispose();
+            fsFile.Close();
         }
 
         public static void GetIndexStripA(BinaryReader br)
@@ -1097,12 +1273,14 @@ namespace EndlessOceanMDLToOBJExporter
             return ArrayValue;
         }
 
+        /*
         public static byte[] ReverseShortToByteArray(short Value)
         {
             byte[] ArrayValue = BitConverter.GetBytes(Value);
             Array.Reverse(ArrayValue);
             return ArrayValue;
         }
+        */
 
         public static void WriteText(FileStream fsLog, string text)
         {
@@ -1153,7 +1331,7 @@ namespace EndlessOceanMDLToOBJExporter
             PrintCenter("Endless Ocean Files Converter\n");
             PrintCenter("Author: NiV, MDB\n");
             PrintCenter("Special thanks to Hiroshi\n");
-            PrintCenter("Version 1.7.1\n"); ;
+            PrintCenter("Version 1.7.2\n"); ;
             PrintCenter("If you have any issues, join this discord server and contact NiV-L-A:\n");
             PrintCenter("https://discord.gg/4hmcsmPMDG\n");
         }
@@ -1199,7 +1377,7 @@ namespace EndlessOceanMDLToOBJExporter
             {
                 PrintInfo();
                 br = null;
-                PrintError($"Error: Magic is missing! Are you loading the correct file?\nMagic: 0x{ReverseUInt32(Magic):X8} - 0x{ReverseUInt16(Magic2):X4} | {Encoding.Default.GetString(BitConverter.GetBytes(Magic))} - {Encoding.Default.GetString(BitConverter.GetBytes(Magic2))}\nFile path: {pathReal}\n");
+                PrintError($"Error: Magic is missing! Are you loading the correct file?\nMagic: 0x{ReverseUInt32(Magic):X8} - 0x{ReverseUInt16(Magic2):X4} | {Encoding.Default.GetString(BitConverter.GetBytes(Magic))} - {Encoding.Default.GetString(BitConverter.GetBytes(Magic2))}\n");
                 Console.WriteLine("Press any key to close the window");
                 Console.Read();
                 return;
@@ -1382,7 +1560,7 @@ namespace EndlessOceanMDLToOBJExporter
                 TRSMat = Getx30App(x30CurrentChunk, (ushort)testa, TRSMatOg);
                 DuplicatedMeshes += 1;
 
-                if(DumpSingleOBJFile)
+                if (DumpSingleOBJFile)
                 {
                     long x30TMP = x30FirstLine;
                     fsNew.Position = x30TMP;
