@@ -1,2 +1,0 @@
-C:\Users\Roberto\Documents\GitHub\Endless-Ocean-MDL-to-OBJ-2\EndlessOceanMDLToOBJExporter\bin\Release\net5.0\publish\EndlessOceanFilesConverter.pdb
-C:\Users\Roberto\Documents\GitHub\Endless-Ocean-MDL-to-OBJ-2\EndlessOceanMDLToOBJExporter\bin\Release\net5.0\publish\EndlessOceanFilesConverter.exe
