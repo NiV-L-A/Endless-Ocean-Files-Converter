@@ -11,7 +11,7 @@
         "projectName": "EndlessOceanFilesConverter",
         "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
         "packagesPath": "C:\\Users\\Roberto\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\",
+        "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\publish\\win-x64\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Roberto\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -69,6 +69,11 @@
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
         }
       }
     }

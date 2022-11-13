@@ -213,6 +213,188 @@
           "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
         }
       }
+    },
+    "net5.0/win-x64": {
+      "Crews.Utility.TgaSharp/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Drawing.Common": "5.0.0"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Utility.TgaSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Utility.TgaSharp.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Microsoft.Win32.SystemEvents/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/_._": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll": {}
+        }
+      },
+      "OpenTK/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Compute": "4.6.7",
+          "OpenTK.Core": "4.6.7",
+          "OpenTK.Graphics": "4.6.7",
+          "OpenTK.Input": "4.6.7",
+          "OpenTK.Mathematics": "4.6.7",
+          "OpenTK.OpenAL": "4.6.7",
+          "OpenTK.Windowing.Common": "4.6.7",
+          "OpenTK.Windowing.Desktop": "4.6.7",
+          "OpenTK.Windowing.GraphicsLibraryFramework": "4.6.7"
+        }
+      },
+      "OpenTK.Compute/4.6.7": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Compute.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Compute.dll": {}
+        }
+      },
+      "OpenTK.Core/4.6.7": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/OpenTK.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/OpenTK.Core.dll": {}
+        }
+      },
+      "OpenTK.Graphics/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Core": "[4.6.7, 4.7.0)",
+          "OpenTK.Mathematics": "[4.6.7, 4.7.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Graphics.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Graphics.dll": {}
+        }
+      },
+      "OpenTK.Input/4.6.7": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/OpenTK.Input.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/OpenTK.Input.dll": {}
+        }
+      },
+      "OpenTK.Mathematics/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "[5.0.0, 5.1.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {}
+        }
+      },
+      "OpenTK.OpenAL/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Core": "[4.6.7, 4.7.0)",
+          "OpenTK.Mathematics": "[4.6.7, 4.7.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.OpenAL.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.OpenAL.dll": {}
+        }
+      },
+      "OpenTK.redist.glfw/3.3.0-pre20200830200122": {
+        "type": "package",
+        "native": {
+          "runtimes/win-x64/native/glfw3.dll": {}
+        }
+      },
+      "OpenTK.Windowing.Common/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Core": "[4.6.7, 4.7.0)",
+          "OpenTK.Mathematics": "[4.6.7, 4.7.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.Common.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.Common.dll": {}
+        }
+      },
+      "OpenTK.Windowing.Desktop/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Core": "[4.6.7, 4.7.0)",
+          "OpenTK.Mathematics": "[4.6.7, 4.7.0)",
+          "OpenTK.Windowing.Common": "[4.6.7, 4.7.0)",
+          "OpenTK.Windowing.GraphicsLibraryFramework": "[4.6.7, 4.7.0)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.Desktop.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.Desktop.dll": {}
+        }
+      },
+      "OpenTK.Windowing.GraphicsLibraryFramework/4.6.7": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK.Core": "[4.6.7, 4.7.0)",
+          "OpenTK.redist.glfw": "[3.3.0-pre20200830200122, 3.4.0-pre)"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.GraphicsLibraryFramework.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OpenTK.Windowing.GraphicsLibraryFramework.dll": {}
+        }
+      },
+      "System.Drawing.Common/5.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "5.0.0"
+        },
+        "compile": {
+          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll": {}
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -530,7 +712,7 @@
       "projectName": "EndlessOceanFilesConverter",
       "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
       "packagesPath": "C:\\Users\\Roberto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\",
+      "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\publish\\win-x64\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Roberto\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -588,6 +770,11 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "win-x64": {
+        "#import": []
       }
     }
   }

@@ -1,0 +1,6 @@
+bin
+.vs
+.git
+obj/Debug
+obj/Release
+obj/publish
