@@ -126,7 +126,8 @@ namespace EndlessOceanMDLToOBJExporter
         public static float RTLZChunkStart = 0;
         public static string MeshName = "";
         public static string NewPath = "";
-        public const string Version = "1.7.3";
+        public static string FileTypes = "*.rtl,*.mdl,*.tdl,*.hit,*.pak,*.txs";
+        public const string Version = "1.7.4";
         public const string SupportedFilesMsg = "To use this tool, drag and drop a file, multiple files, a folder, or multiple folders, containing one or more of the following supported file formats:\n.mdl -> .obj\n.hit -> .obj\n.tdl -> .tga\n.pak -> Dumps contents by creating a folder with the same name\n.txs -> Dumps contents by creating a folder with the same name\n.rtl -> To be passed along with the bNNrodMM.mdl files";
         public static ushort[] MatIndices = null;
         public static float[] XCoordsArray = null;
@@ -607,7 +608,6 @@ namespace EndlessOceanMDLToOBJExporter
                         int Blocks = 0;
                         NewPath = $"{Path.GetDirectoryName(arg)}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(arg)}.tga";
                         Console.Title = $"Endless Ocean Files Converter - Arg: {narg}/{args.Length} - .tdl ({TDLCounter}/{TDLCount})";
-                        Texturecount += 1;
 
                         using FileStream fsTDL = new(arg, FileMode.Open);
                         using BinaryReader brTDL = new(fsTDL);
@@ -753,11 +753,11 @@ namespace EndlessOceanMDLToOBJExporter
                 MeshTotalCount += DuplicatedMeshes;
             }
 
-            if (Texturecount > 0)
-                Console.WriteLine($"Total Textures: {Texturecount} [0x{Texturecount:X4}]");
+            if (TDLCounter > 0)
+                Console.WriteLine($"Total .tdl: {TDLCounter} [0x{TDLCounter:X4}]");
 
             if (HITCounter > 0)
-                Console.WriteLine($"Total Hit: {HITCounter} [0x{HITCounter:X4}]");
+                Console.WriteLine($"Total .hit: {HITCounter} [0x{HITCounter:X4}]");
 
             if (RFCounter > 0)
                 Console.WriteLine($"Total .pak/.txs: {RFCounter} [0x{RFCounter:X4}]");
@@ -773,65 +773,59 @@ namespace EndlessOceanMDLToOBJExporter
 
         public static List<string> ParseInput(string[] args)
         {
-            //Which files have been passed? Was a folder passed? Also scans for .rtl
-            string[] RTLargs = null;
-            string[] MDLargs = null;
-            string[] TDLargs = null;
-            string[] HITargs = null;
-            string[] PAKargs = null;
-            string[] TXSargs = null;
+            //Parses the arguments passed to the exe. Also parses .rtl. "*.rtl,*.mdl,*.tdl,*.hit,*.pak,*.txs"
             List<string> ListAllFiles = new();
+
+            if (args[0].StartsWith("-")) //if first argument is -extension, then only count that filetype
+            {
+                FileTypes = "*." + args[0].Substring(1, 3);
+                var q = args.ToList();
+                q.RemoveAt(0);
+                args = q.ToArray();
+            }
 
             foreach (string arg in args)
             {
                 if (Path.GetExtension(arg) == "") //folder
                 {
-                    string[] AllFiles = Directory.GetFiles(arg);
-                    List<string> RTLListFolder = FindExtInArray(AllFiles, ".rtl");
-                    List<string> MDLListFolder = FindExtInArray(AllFiles, ".mdl");
-                    List<string> TDLListFolder = FindExtInArray(AllFiles, ".tdl");
-                    List<string> HITListFolder = FindExtInArray(AllFiles, ".hit");
-                    List<string> PAKListFolder = FindExtInArray(AllFiles, ".pak");
-                    List<string> TXSListFolder = FindExtInArray(AllFiles, ".txs");
-                    RTLargs = RTLListFolder.ToArray();
-                    MDLargs = MDLListFolder.ToArray();
-                    TDLargs = TDLListFolder.ToArray();
-                    HITargs = HITListFolder.ToArray();
-                    PAKargs = PAKListFolder.ToArray();
-                    TXSargs = TXSListFolder.ToArray();
-                    ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(HITargs.Concat(PAKargs.Concat(TXSargs)))).ToList()).ToList();
+                    try
+                    {
+                        string[] AllFilesExt = Directory.GetFiles(arg, "*.*", SearchOption.AllDirectories).Where(s => FileTypes.Contains(Path.GetExtension(s))).ToArray();
+                        ListAllFiles.AddRange(AllFilesExt);
+                    }
+                    catch(DirectoryNotFoundException dnfe)
+                    {
+                        PrintError(dnfe.Message);
+                        Console.WriteLine($"{SupportedFilesMsg}\n\nPress any key to close this window.");
+                        Console.Read();
+                        Environment.Exit(0); //Brutal. Is there a better way?
+                    }
+                }
+                else //file(s)
+                {
+                    if (FileTypes.Contains(Path.GetExtension(arg)))
+                    {
+                        ListAllFiles.Add(arg);
+                    }
                 }
             }
 
-            if (ListAllFiles.Count == 0)
-            {
-                List<string> RTLList = FindExtInArray(args, ".rtl");
-                List<string> MDLList = FindExtInArray(args, ".mdl");
-                List<string> TDLList = FindExtInArray(args, ".tdl");
-                List<string> HITList = FindExtInArray(args, ".hit");
-                List<string> PAKList = FindExtInArray(args, ".pak");
-                List<string> TXSList = FindExtInArray(args, ".txs");
-                RTLargs = RTLList.ToArray();
-                MDLargs = MDLList.ToArray();
-                TDLargs = TDLList.ToArray();
-                HITargs = HITList.ToArray();
-                PAKargs = PAKList.ToArray();
-                TXSargs = TXSList.ToArray();
-                ListAllFiles = ListAllFiles.Concat(MDLargs.Concat(TDLargs.Concat(HITargs.Concat(PAKargs.Concat(TXSargs)))).ToList()).ToList();
-            }
+            ListAllFiles = ListAllFiles.Distinct().ToList(); //remove dups
+            string[] RTLargs = ListAllFiles.Where(s => s.EndsWith(".rtl")).ToArray();
 
             if (RTLargs != null)
             {
                 if (RTLargs.Length > 0) //if .rtl found
                 {
                     ParseRTL(RTLargs);
+                    ListAllFiles.Remove(RTLargs[0]);
                 }
             }
 
-            MDLCount = MDLargs.Length;
-            TDLCount = TDLargs.Length;
-            HITCount = HITargs.Length;
-            RFCount = PAKargs.Length + TXSargs.Length;
+            MDLCount = ListAllFiles.Where(s => s.EndsWith(".mdl")).ToArray().Length;
+            TDLCount = ListAllFiles.Where(s => s.EndsWith(".tdl")).ToArray().Length;
+            HITCount = ListAllFiles.Where(s => s.EndsWith(".hit")).ToArray().Length;
+            RFCount = ListAllFiles.Where(s => s.EndsWith(".pak")).ToArray().Length + ListAllFiles.Where(s => s.EndsWith(".txs")).ToArray().Length;
             return ListAllFiles;
         }
 
@@ -1666,7 +1660,7 @@ namespace EndlessOceanMDLToOBJExporter
 
         public static void ParseRTL(string[] RTLargs)
         {
-            if (Path.GetFileNameWithoutExtension(RTLargs[0]) != "s01f")
+            if (Path.GetFileNameWithoutExtension(RTLargs[0]) != "s01f") //EO2 bNNstage.rtl files
             {
                 using FileStream fsRTL = new(RTLargs[0], FileMode.Open);
                 using BinaryReader brRTL = new(fsRTL);

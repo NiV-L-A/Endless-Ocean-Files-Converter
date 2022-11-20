@@ -2,8 +2,19 @@
 - Endless Ocean Files Converter
 - Author: NiV, MDB
 - Special thanks to Hiroshi
-- Current version: 1.7.3
+- Current version: 1.7.4
 - *If you have any issues, join this discord server and contact NiV-L-A: https://discord.gg/4hmcsmPMDG - Endless Ocean Wiki Server
+
+## Changelog ##
+### v1.7.4 - 20/11/2022 ###
+- If a folder is passed as an argument, the app will now detect the files contained in its sub-directories.
+	- For example, if "C:\Users\Roberto\Desktop\Test\qwe" is passed, the app will *also* parse the files in "C:\Users\Roberto\Desktop\Test\qwe\rty".
+- The first argument passed to the app *can* be "-ABC", where ABC is the extension of one of the supported file types (see below for a list).
+	- When this is done, the app will only detect files with the ABC extension. So, it is recommended modifying the shortcut destination path of the app, and adding, for example, "-tdl", to only parse .tdl files.
+- The app now automatically removes duplicates.
+	- For example, if "C:\Users\Roberto\Desktop\Test\qwe" and "C:\Users\Roberto\Desktop\Test\qwe\d123.mdl" are passed, there will be only one appearance of "C:\Users\Roberto\Desktop\Test\qwe\d123.mdl".
+- Fixed a bug in which multiple folders failed to parse.
+- Better parsing of the arguments given by the user.
 
 ## Changelog ##
 ### v1.7.3 - 13/11/2022 ###
