@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using EndlessOceanMDLToOBJExporter;
 using OpenTK.Mathematics;
+using static EndlessOceanFilesConverter.Utils;
 
 namespace EndlessOceanFilesConverter
 {
-    public class HITStream
+    class HITStream
     {
-        public CHITFileHeader Header;
-        public CHITColData ColData;
-        public CFBH.CFBHHDR FBHData;
+        public Header_t Header;
+        public ColData_t ColData;
+        public FBH_t.FBHData_t FBHData;
 
-        public HITStream(BinaryReader brHIT)
+        public HITStream(EndianBinaryReader br)
         {
-            Header = new(brHIT);
-
-            ColData = new(brHIT, Header);
-
-            FBHData = new(brHIT, Header);
+            Header = new(br);
+            ColData = new(br, Header);
+            FBHData = new(br, Header);
         }
 
-        public class CHITFileHeader
+        public class Header_t
         {
             public ushort unk01;
             public ushort HITVersion;
@@ -35,67 +31,67 @@ namespace EndlessOceanFilesConverter
             public uint unk02;
             public uint OffFBH;
 
-            public CHITFileHeader(BinaryReader brHIT)
+            public Header_t(EndianBinaryReader br)
             {
-                this.unk01 = Program.ReadBEUInt16(brHIT);
-                this.HITVersion = Program.ReadBEUInt16(brHIT);
-                this.Magic = Encoding.ASCII.GetString(BitConverter.GetBytes(brHIT.ReadUInt32()));
-                this.ColCount = Program.ReadBEUInt32(brHIT);
-                this.OffColInfo = Program.ReadBEUInt32(brHIT);
-                this.OffPolyInfo = Program.ReadBEUInt32(brHIT);
-                this.OffVTXBuffer = Program.ReadBEUInt32(brHIT);
-                this.unk02 = Program.ReadBEUInt32(brHIT);
-                this.OffFBH = Program.ReadBEUInt32(brHIT);
+                unk01 = br.ReadUInt16();
+                HITVersion = br.ReadUInt16();
+                Magic = Program.ReadStrAdv(br, 4);
+                ColCount = br.ReadUInt32();
+                OffColInfo = br.ReadUInt32();
+                OffPolyInfo = br.ReadUInt32();
+                OffVTXBuffer = br.ReadUInt32();
+                unk02 = br.ReadUInt32();
+                OffFBH = br.ReadUInt32();
             }
         }
 
-        public class CHITColData
+        public class ColData_t
         {
-            public List<CHITData> HITData = new();
+            public List<HITData_t> HITData = new();
 
-            public CHITColData(BinaryReader brHIT, CHITFileHeader Header)
+            public ColData_t(EndianBinaryReader br, Header_t Header)
             {
                 for (int i = 0; i < Header.ColCount; i++)
                 {
-                    HITData.Add(new(brHIT, Header, i));
+                    HITData.Add(new(br, Header, i));
                 }
             }
         }
 
 
-        public class CHITData
+        public class HITData_t
         {
             public string ColName;
-            public CHITColInfo ColInfo;
-            public List<CHITPolyInfo> PolyInfo = new();
+            public ColInfo_t ColInfo;
+            public List<PolyInfo_t> PolyInfo = new();
             public List<Vector3> Vertices = new();
 
-            public CHITData(BinaryReader brHIT, CHITFileHeader Header, int i)
+            public HITData_t(EndianBinaryReader br, Header_t Header, int i)
             {
-                ColName = Program.ReadNullTerminatedString(brHIT, (uint)((Header.HITVersion == 0x10) ? 0x20 : 0x10));
-                brHIT.BaseStream.Seek(Header.OffColInfo + (i * 0x40), SeekOrigin.Begin);
-                ColInfo = new(brHIT);
-                brHIT.BaseStream.Seek(Header.OffPolyInfo + (ColInfo.PolyCountSum * 0x20), SeekOrigin.Begin);
+                ColName = Program.ReadStrAdv(br, (uint)((Header.HITVersion == 0x10) ? 0x20 : 0x10));
+                br.BaseStream.Seek(Header.OffColInfo + (i * 0x40), SeekOrigin.Begin);
+                ColInfo = new(br);
+                br.BaseStream.Seek(Header.OffPolyInfo + (ColInfo.PolyCountSum * 0x20), SeekOrigin.Begin);
 
                 for (int j = 0; j < ColInfo.PolyCount; j++)
                 {
-                    PolyInfo.Add(new(brHIT));
-                    brHIT.BaseStream.Seek(Header.OffVTXBuffer + PolyInfo[j].VTXBufferOff * 0x10, SeekOrigin.Begin);
+                    PolyInfo.Add(new(br));
+                    br.BaseStream.Seek(Header.OffVTXBuffer + PolyInfo[j].VTXBufferOff * 0x10, SeekOrigin.Begin);
 
                     for (int k = 0; k < PolyInfo[j].VTXCount; k++)
                     {
-                        Vertices.Add((Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT)));
-                        brHIT.BaseStream.Seek(0x4, SeekOrigin.Current);
+                        Vertices.Add((br.ReadSingle(), br.ReadSingle(), br.ReadSingle()));
+                        br.BaseStream.Seek(0x4, SeekOrigin.Current);
                     }
 
-                    brHIT.BaseStream.Seek(Header.OffPolyInfo + (ColInfo.PolyCountSum * 0x20) + ((j + 1) * 0x20), SeekOrigin.Begin);
+                    br.BaseStream.Seek(Header.OffPolyInfo + (ColInfo.PolyCountSum * 0x20) + ((j + 1) * 0x20), SeekOrigin.Begin);
                 }
 
-                brHIT.BaseStream.Seek(0x20 + ((i + 1) * ((Header.HITVersion == 0x10) ? 0x20 : 0x10)), SeekOrigin.Begin);
+                br.BaseStream.Seek(0x20 + ((i + 1) * ((Header.HITVersion == 0x10) ? 0x20 : 0x10)), SeekOrigin.Begin);
             }
         }
 
-        public class CHITPolyInfo
+        public class PolyInfo_t
         {
             public uint VTXCount;
             public uint VTXBufferOff;
@@ -103,17 +99,17 @@ namespace EndlessOceanFilesConverter
             public uint unk03;
             public Vector3 Floats;
 
-            public CHITPolyInfo(BinaryReader brHIT)
+            public PolyInfo_t(EndianBinaryReader br)
             {
-                this.VTXCount = Program.ReadBEUInt32(brHIT);
-                this.VTXBufferOff = Program.ReadBEUInt32(brHIT);
-                this.unk02 = Program.ReadBEUInt32(brHIT);
-                this.unk03 = Program.ReadBEUInt32(brHIT);
-                this.Floats = (Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT));
+                VTXCount = br.ReadUInt32();
+                VTXBufferOff = br.ReadUInt32();
+                unk02 = br.ReadUInt32();
+                unk03 = br.ReadUInt32();
+                Floats = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
             }
         }
 
-        public class CHITColInfo
+        public class ColInfo_t
         {
             public uint OneOrTwo;
             public uint PolyCount;
@@ -123,43 +119,43 @@ namespace EndlessOceanFilesConverter
             public Vector3 Origin_XYZCopy;
             public Vector3 Scale_XYZ;
 
-            public CHITColInfo(BinaryReader brHIT)
+            public ColInfo_t(EndianBinaryReader br)
             {
-                this.OneOrTwo = Program.ReadBEUInt32(brHIT);
-                this.PolyCount = Program.ReadBEUInt32(brHIT);
-                this.PolyCountSum = Program.ReadBEUInt32(brHIT);
-                this.unk01 = Program.ReadBEFloat(brHIT);
-                this.Origin_XYZ = (Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT));
-                brHIT.BaseStream.Seek(0x4, SeekOrigin.Current);
-                this.Origin_XYZCopy = (Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT));
-                brHIT.BaseStream.Seek(0x4, SeekOrigin.Current);
-                this.Scale_XYZ = (Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT), Program.ReadBEFloat(brHIT));
+                OneOrTwo = br.ReadUInt32();
+                PolyCount = br.ReadUInt32();
+                PolyCountSum = br.ReadUInt32();
+                unk01 = br.ReadSingle();
+                Origin_XYZ = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                br.BaseStream.Seek(0x4, SeekOrigin.Current);
+                Origin_XYZCopy = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                br.BaseStream.Seek(0x4, SeekOrigin.Current);
+                Scale_XYZ = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
             }
         }
 
-        public class CFBH
+        public class FBH_t
         {
-            public class CFBHHDR
+            public class FBHData_t
             {
-                public List<CTrans> FBHList = new();
+                public List<Trans_t> FBHList = new();
 
-                public CFBHHDR(BinaryReader brHIT, CHITFileHeader Header)
+                public FBHData_t(EndianBinaryReader br, Header_t Header)
                 {
-                    brHIT.BaseStream.Seek(Header.OffFBH + ((Header.HITVersion == 0x10) ? 0x8 : 0x6), SeekOrigin.Begin);
+                    br.BaseStream.Seek(Header.OffFBH + ((Header.HITVersion == 0x10) ? 0x8 : 0x6), SeekOrigin.Begin);
 
-                    ushort TransCount = Program.ReadBEUInt16(brHIT);
+                    ushort TransCount = br.ReadUInt16();
 
-                    brHIT.BaseStream.Seek(((Header.HITVersion == 0x10) ? 0xE : 0x8), SeekOrigin.Current);
+                    br.BaseStream.Seek(((Header.HITVersion == 0x10) ? 0xE : 0x8), SeekOrigin.Current);
 
                     for (int i = 0; i < TransCount; i++)
                     {
-                        CTrans FBHTrans = new(brHIT, (byte)Header.HITVersion);
+                        Trans_t FBHTrans = new(br, (byte)Header.HITVersion);
                         FBHList.Add(FBHTrans);
                     }
                 }
             }
 
-            public class CTrans
+            public class Trans_t
             {
                 public ushort ID;
                 public ushort NextColsCount;
@@ -168,25 +164,24 @@ namespace EndlessOceanFilesConverter
                 public Vector3 Translation;
                 public Quaternion Rotation;
 
-                public CTrans(BinaryReader br, byte version)
+                public Trans_t(EndianBinaryReader br, byte version)
                 {
                     if (version == 0x10)
                     {
-                        this.ID = Program.ReadBEUInt16(br);
-                        this.NextColsCount = br.ReadByte();
-                        this.Flag = br.ReadByte();
-
-                        this.Translation = (Program.ReadBEFloat(br), Program.ReadBEFloat(br), Program.ReadBEFloat(br));
-                        this.Rotation.Xyz = (Program.ReadBEFloat(br), Program.ReadBEFloat(br), Program.ReadBEFloat(br));
-                        this.Rotation.W = Program.ReadBEFloat(br);
+                        ID = br.ReadUInt16();
+                        NextColsCount = br.ReadByte();
+                        Flag = br.ReadByte();
+                        Translation = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                        Rotation.Xyz = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                        Rotation.W = br.ReadSingle();
                     }
                     else
                     {
-                        this.Translation = (Program.ReadBEFloat(br), Program.ReadBEFloat(br), Program.ReadBEFloat(br));
-                        this.Rotation.W = 1f;
-                        this.ID = Program.ReadBEUInt16(br);
-                        this.Flag = br.ReadByte();
-                        this.NextColsCount = br.ReadByte();
+                        Translation = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                        Rotation.W = 1f;
+                        ID = br.ReadUInt16();
+                        Flag = br.ReadByte();
+                        NextColsCount = br.ReadByte();
                     }
                 }
             }
@@ -197,7 +192,7 @@ namespace EndlessOceanFilesConverter
             Matrix4 TRSMat = Matrix4.CreateFromQuaternion(Program.QuatIdentity);
             TRSMat *= Matrix4.CreateFromQuaternion(RotCorrection);
             TRSMat *= Matrix4.CreateTranslation(new(TransCorrection));
-            for (int i = 0; i < Vec3.Count(); i++)
+            for (int i = 0; i < Vec3.Count; i++)
             {
                 Vec3[i] = Vector3.TransformPosition(Vec3[i], TRSMat);
             }

@@ -1,11 +1,57 @@
 ## INFO ##
 - Endless Ocean Files Converter
-- Author: NiV, MDB
+- Authors: NiV, MDB
 - Special thanks to Hiroshi
-- Current version: 1.7.4
+- Current version: 1.7.5
 - *If you have any issues, join this discord server and contact NiV-L-A: https://discord.gg/4hmcsmPMDG - Endless Ocean Wiki Server
 
+## Description ##
+- C# app that converts multiple file formats from the Endless Ocean serie into common ones.
+- Supported file formats:
+	- .mdl -> .obj
+	- .hit -> .obj
+	- .tdl -> .tga
+	- .pak -> Dumps contents by creating a folder with the same name
+	- .txs -> Dumps contents by creating a folder with the same name
+	- .rtl -> To be passed along with the bNNrodMM.mdl files
+
+## How to run ##
+- To use this tool, drag and drop a file, multiple files, a folder, or multiple folders, containing one or more of the supported file formats, onto the .exe!
+- NOTE: You need .NET Desktop Runtime 5.0 to run this program.
+	- https://dotnet.microsoft.com/en-us/download/dotnet/5.0
+- Parsing of the Endless Ocean 1 main map (stage/sea/s01fNNMM.mdl) requires a custom .rtl file to correctly place the meshes. It is included in the .7z, but you can download it from here:
+	- https://mega.nz/file/19wSHbhD#X4Z5SU3hq38YoeAc7KhbWn2XE7ijmvgwcnk8RJGgE_E
+	
+## TO DO: ##
+- 0x50 Codes (duplicate meshes outside of the .mdl, that references other .mdl files: deep hole, weddell sea, north coast of canada, etc...).
+- Correct parsing for bNNpmset.mdl files.
+- Implement multitexturing support for EO2.
+- Add transparency to the meshes/textures that require it (there's a flag for it so no big deal, but .obj doesn't support transparency as far as I looked around).
+- Discover how the character's heads get in their right position.
+- Convert .tdl directly to .tga.
+- The converter only supports .tdl files that have the 0xA and 0x5 format. Other 2 possible formats are 0x8 and 0x1.
+- Better code to handle .hit files.
+
 ## Changelog ##
+### v1.7.5 - 10/12/2022 ###
+- Removed the string termination character from the regular expressions for rods.
+	- For example: "b02rod57.mdl" and "b02rod57 - Copy.mdl" will be treated the same way.
+- If a .mdl file contains .tdl files, the app will dump and convert them to .tga.
+- If a .mdl file contains .txs files, which contain .tdl files, the app will dump the .tdl files contained in the .txs files and convert them to .tga.
+- Changed the naming for .tga files to match with how the other file types are treated.
+	- For example: "jaws.tdl" will get converted to "jaws.tdl.tga" (previously it got converted to "jaws.tga").
+	- If a file name is truncated (because of the RF archive limitations), the app will append ".tdl" when dumping.
+		- For example: "s00stagetm00.td" will get converted to "s00stagetm00.td.tdl.tga".
+- Better code to handle .mdl files.
+	- Implemented multiple MDLStream related classes.
+	- Better code to handle duplicated meshes.
+	- Better code to get the final TRS Matrix from the Hierarchy list.
+	- Better code to parse the indices sections.
+- Implemented the EndianBinaryReader class to be able to swap endianness on the fly.
+- Removed some information from the .mdl.obj output.
+- Removed redundant code.
+- Changed README.md structure.
+
 ### v1.7.4 - 20/11/2022 ###
 - If a folder is passed as an argument, the app will now detect the files contained in its sub-directories.
 	- For example, if "C:\Users\Roberto\Desktop\Test\qwe" is passed, the app will *also* parse the files in "C:\Users\Roberto\Desktop\Test\qwe\rty".
@@ -16,7 +62,6 @@
 - Fixed a bug in which multiple folders failed to parse.
 - Better parsing of the arguments given by the user.
 
-## Changelog ##
 ### v1.7.3 - 13/11/2022 ###
 - Fixed a bug regarding the duplication mesh system.
 - .tdl files now get converted to .tga.
@@ -76,30 +121,3 @@
 	- How many bmp textures it converted.
 	- How many triangle strips with at least 2 equal faces it found.
 	- How many meshes it converted.
-
-## Description ##
-- Straight-forward C# code that converts multiple file formats from the Endless Ocean serie into common ones.
-- Supported file formats:
-	- .mdl -> .obj
-	- .hit -> .obj
-	- .tdl -> .tga
-	- .pak -> Dumps contents by creating a folder with the same name
-	- .txs -> Dumps contents by creating a folder with the same name
-	- .rtl -> To be passed along with the bNNrodMM.mdl files
-
-## How to run ##
-- To use this tool, drag and drop a file, multiple files, a folder, or multiple folders, containing one or more of the supported file formats, onto the .exe!
-- NOTE: You need .NET Desktop Runtime 5.0 to run this program.
-	- https://dotnet.microsoft.com/en-us/download/dotnet/5.0
-- Parsing of the Endless Ocean 1 main map (stage/sea/s01fNNMM.mdl) requires a special .rtl file to correctly place the meshes. It is included in the .7z, but you can download it from here:
-	- https://mega.nz/file/19wSHbhD#X4Z5SU3hq38YoeAc7KhbWn2XE7ijmvgwcnk8RJGgE_E
-
-## TO DO: ##
-- 0x50 Codes (duplicate meshes outside of the .mdl, that references other .mdl files: deep hole, weddell sea, north coast of canada, etc...).
-- Correct parsing for bNNpmset.mdl.
-- Implement multitexturing support for EO2.
-- Add transparency to the meshes/textures that require it (there's a flag for it so no big deal, but .obj doesn't support transparency as far as I looked around).
-- Discover how the character's heads get in their right position.
-- Convert .tdl directly to .tga.
-- The converter only supports .tdl files that have the 0xA and 0x5 format. Other 2 possible formats are 0x8 and 0x1.
-- Implement the other classes in MDLStream.cs.

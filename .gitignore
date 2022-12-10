@@ -1,6 +1,7 @@
-bin
-.vs
-.git
+bin/
+.vs/
+.git/
 obj/Debug/
 obj/Release/
 obj/publish/
+*.user

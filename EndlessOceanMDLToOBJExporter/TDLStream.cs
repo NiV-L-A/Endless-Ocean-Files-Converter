@@ -3,23 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using static EndlessOceanFilesConverter.Utils;
 
 namespace EndlessOceanFilesConverter
 {
-    public class TDLStream
+    class TDLStream
     {
-        public CHeader Header;
-        public CData Data;
+        public Header_t Header;
+        public Data_t Data;
 
-        public TDLStream(BinaryReader brTDL)
+        public TDLStream(EndianBinaryReader br)
         {
-            this.Header = new(brTDL);
-            brTDL.BaseStream.Position = Header.FileHeader.PixelDataStart;
-            this.Data = new(brTDL, Header);
+            Header = new(br);
+            br.BaseStream.Position = Header.FileHeader.PixelDataStart;
+            Data = new(br, Header);
         }
 
-        public static void TransformCMPRBlock(CCMPRBlock Data, int Blocks, uint OutputFormat)
+        public static void TransformCMPRBlock(CMPRBlock_t Data, int Blocks, uint OutputFormat)
         {
             for (int InternalBlocks = 0; InternalBlocks < Blocks; InternalBlocks++)
             {
@@ -60,12 +60,12 @@ namespace EndlessOceanFilesConverter
                     }
                     else if (OutputFormat == 1)
                     {
-                        B3 = B3 & 0b11111000;
-                        G3 = G3 & 0b11111100;
-                        R3 = R3 & 0b11111000;
-                        B4 = B4 & 0b11111000;
-                        G4 = G4 & 0b11111100;
-                        R4 = R4 & 0b11111000;
+                        B3 &= 0b11111000;
+                        G3 &= 0b11111100;
+                        R3 &= 0b11111000;
+                        B4 &= 0b11111000;
+                        G4 &= 0b11111100;
+                        R4 &= 0b11111000;
 
                         BGRA1 = CreateBGRA(B1, G1, R1, OutputFormat);
                         BGRA2 = CreateBGRA(B2, G2, R2, OutputFormat);
@@ -88,9 +88,9 @@ namespace EndlessOceanFilesConverter
                     }
                     else if (OutputFormat == 1)
                     {
-                        B3 = B3 & 0b11111000;
-                        G3 = G3 & 0b11111100;
-                        R3 = R3 & 0b11111000;
+                        B3 &= 0b11111000;
+                        G3 &= 0b11111100;
+                        R3 &= 0b11111000;
 
                         BGRA1 = CreateBGRA(B1, G1, R1, OutputFormat);
                         BGRA2 = CreateBGRA(B2, G2, R2, OutputFormat);
@@ -114,7 +114,7 @@ namespace EndlessOceanFilesConverter
             }
         }
 
-        public static void TransformRGB5A3Block(CRGB5A3Block Data, int Blocks, uint OutputFormat)
+        public static void TransformRGB5A3Block(RGBA5A3Block_t Data, int Blocks)
         {
             for (int CurrentBlock = 0; CurrentBlock < Blocks; CurrentBlock++)
             {
@@ -131,7 +131,7 @@ namespace EndlessOceanFilesConverter
             }
         }
 
-        public static void TransformRGB5A3Palette(CPalette Palette, int Blocks)
+        public static void TransformRGB5A3Palette(Palette_t Palette, int Blocks)
         {
             uint B = 0;
             uint G = 0;
@@ -268,25 +268,25 @@ namespace EndlessOceanFilesConverter
         }
     }
 
-    public class CHeader
+    class Header_t
     {
-        public CFileHeader FileHeader;
-        public List<CTextureHeader> TextureHeaders = new();
+        public FileHeader_t FileHeader;
+        public List<TextureHeader_t> TextureHeaders = new();
 
-        public CHeader(BinaryReader brTDL)
+        public Header_t(EndianBinaryReader br)
         {
-            this.FileHeader = new(brTDL);
+            FileHeader = new(br);
 
             for (int i = 0; i < FileHeader.TextureCount; i++)
             {
-                CTextureHeader TextureHeader;
-                TextureHeader = new(brTDL);
-                this.TextureHeaders.Add(TextureHeader);
+                TextureHeader_t TextureHeader;
+                TextureHeader = new(br);
+                TextureHeaders.Add(TextureHeader);
             }
         }
     }
 
-    public class CFileHeader
+    class FileHeader_t
     {
         public string Magic;
         public uint unk01;
@@ -300,23 +300,23 @@ namespace EndlessOceanFilesConverter
         public uint PixelDataStart;
         public uint PaletteStart;
 
-        public CFileHeader(BinaryReader brTDL)
+        public FileHeader_t(EndianBinaryReader br)
         {
-            this.Magic = Encoding.ASCII.GetString(BitConverter.GetBytes(brTDL.ReadUInt32()));
-            this.unk01 = Program.ReadBEUInt32(brTDL);
-            this.TotalWidth = Program.ReadBEUInt16(brTDL);
-            this.TotalHeight = Program.ReadBEUInt16(brTDL);
-            this.TextureCount = Program.ReadBEUInt16(brTDL);
-            this.MipmapCount = Program.ReadBEUInt16(brTDL);
-            this.Format = brTDL.ReadByte();
-            this.unk02 = brTDL.ReadByte();
-            this.PaletteSize = Program.ReadBEUInt16(brTDL);
-            this.PixelDataStart = Program.ReadBEUInt32(brTDL);
-            this.PaletteStart = Program.ReadBEUInt32(brTDL);
+            Magic = Program.ReadStrAdv(br, 4);
+            unk01 = br.ReadUInt32();
+            TotalWidth = br.ReadUInt16();
+            TotalHeight = br.ReadUInt16();
+            TextureCount = br.ReadUInt16();
+            MipmapCount = br.ReadUInt16();
+            Format = br.ReadByte();
+            unk02 = br.ReadByte();
+            PaletteSize = br.ReadUInt16();
+            PixelDataStart = br.ReadUInt32();
+            PaletteStart = br.ReadUInt32();
         }
     }
 
-    public class CTextureHeader
+    class TextureHeader_t
     {
         public uint unk01;
         public ushort TextureWidth;
@@ -324,64 +324,64 @@ namespace EndlessOceanFilesConverter
         public ushort OffsetWidth;
         public ushort OffsetHeight;
 
-        public CTextureHeader(BinaryReader brTDL)
+        public TextureHeader_t(EndianBinaryReader br)
         {
-            this.unk01 = Program.ReadBEUInt32(brTDL);
-            this.TextureWidth = Program.ReadBEUInt16(brTDL);
-            this.TextureHeight = Program.ReadBEUInt16(brTDL);
-            this.OffsetWidth = Program.ReadBEUInt16(brTDL);
-            this.OffsetHeight = Program.ReadBEUInt16(brTDL);
+            unk01 = br.ReadUInt32();
+            TextureWidth = br.ReadUInt16();
+            TextureHeight = br.ReadUInt16();
+            OffsetWidth = br.ReadUInt16();
+            OffsetHeight = br.ReadUInt16();
         }
     }
 
-    public class CData
+    class Data_t
     {
-        public CCMPRBlock CMPRBlock;
-        public CRGB5A3Block RGB5A3Block;
-        public CPalette Palette;
+        public CMPRBlock_t CMPRBlock;
+        public RGBA5A3Block_t RGB5A3Block;
+        public Palette_t Palette;
 
-        public CData(BinaryReader brTDL, CHeader Header)
+        public Data_t(EndianBinaryReader br, Header_t Header)
         {
             if (Header.FileHeader.Format == 10)
             {
-                this.CMPRBlock = new(brTDL, Header.FileHeader.TotalHeight * Header.FileHeader.TotalWidth / 16);
+                CMPRBlock = new(br, Header.FileHeader.TotalHeight * Header.FileHeader.TotalWidth / 16);
             }
             else if (Header.FileHeader.Format == 5)
             {
-                this.RGB5A3Block = new(brTDL, Header.FileHeader.TotalHeight * Header.FileHeader.TotalWidth / 32);
-                brTDL.BaseStream.Seek(Header.FileHeader.PaletteStart, SeekOrigin.Begin);
-                this.Palette = new(brTDL, (Header.FileHeader.PaletteSize / 2));
+                RGB5A3Block = new(br, Header.FileHeader.TotalHeight * Header.FileHeader.TotalWidth / 32);
+                br.BaseStream.Seek(Header.FileHeader.PaletteStart, SeekOrigin.Begin);
+                Palette = new(br, (Header.FileHeader.PaletteSize / 2));
             }
         }
     }
 
-    public class CCMPRBlock
+    class CMPRBlock_t
     {
         public List<uint[]> BGRA = new();
         public List<uint[]> Indices = new();
 
-        public CCMPRBlock(BinaryReader brTDL, int Blocks)
+        public CMPRBlock_t(EndianBinaryReader br, int Blocks)
         {
             for (int CountBlocks = 0; CountBlocks < Blocks; CountBlocks++)
             {
-                uint[] BGRATemp = new uint[4] { Program.ReadBEUInt16(brTDL), Program.ReadBEUInt16(brTDL), 0, 0 };
+                uint[] BGRATemp = new uint[4] { br.ReadUInt16(), br.ReadUInt16(), 0, 0 };
                 BGRA.Add(BGRATemp);
-                uint[] Index = new uint[16] { Program.ReadBEUInt32(brTDL), 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                uint[] Index = new uint[16] { br.ReadUInt32(), 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
                 Indices.Add(Index);
             }
         }
     }
 
-    public class CRGB5A3Block
+    class RGBA5A3Block_t
     {
         public List<uint[]> ColorIndices = new();
         public List<uint[]> Indices = new();
 
-        public CRGB5A3Block(BinaryReader brTDL, int Blocks)
+        public RGBA5A3Block_t(EndianBinaryReader br, int Blocks)
         {
             for (int CountBlocks = 0; CountBlocks < Blocks; CountBlocks++)
             {
-                uint[] Index = new uint[8] { Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL), Program.ReadBEUInt32(brTDL)};
+                uint[] Index = new uint[8] { br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32() };
                 ColorIndices.Add(Index);
                 uint[] TIndex = new uint[32];
                 Indices.Add(TIndex);
@@ -389,15 +389,15 @@ namespace EndlessOceanFilesConverter
         }
     }
 
-    public class CPalette
+    class Palette_t
     {
         public List<uint> ARGB = new();
 
-        public CPalette(BinaryReader brTDL, int Blocks)
+        public Palette_t(EndianBinaryReader br, int Blocks)
         {
             for (int CountBlocks = 0; CountBlocks < Blocks; CountBlocks++)
             {
-                uint Num = Program.ReadBEUInt16(brTDL);
+                uint Num = br.ReadUInt16();
                 ARGB.Add(Num);
             }
         }
