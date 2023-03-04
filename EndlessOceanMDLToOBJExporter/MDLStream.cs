@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using EndlessOceanMDLToOBJExporter;
+using System.Text;
 using OpenTK.Mathematics;
 using static EndlessOceanFilesConverter.Utils;
 
@@ -401,7 +401,7 @@ namespace EndlessOceanFilesConverter
                 */
                 MeshHeaderOff = br.ReadUInt32();
                 MeshSize = br.ReadUInt32();
-                
+
                 if (MeshType == 0x50)
                 {
                     br.Skip(8);
@@ -455,7 +455,7 @@ namespace EndlessOceanFilesConverter
                     TextureIndex2 = br.ReadUInt16();
                     br.BaseStream.Seek(2, SeekOrigin.Current);
                 }
-                
+
             }
         }
 
@@ -514,7 +514,7 @@ namespace EndlessOceanFilesConverter
                 //BE
             }
         }
-        public class CHierarchyObject
+        public class HierarchyObject_t
         {
             public int ID;
             public int PrevObjID;
@@ -529,9 +529,7 @@ namespace EndlessOceanFilesConverter
             public Quaternion Rotation;
             public Vector3 Scale;
             public string MeshName;
-
-
-            public CHierarchyObject(EndianBinaryReader br, uint VDLOff)
+            public HierarchyObject_t(EndianBinaryReader br, uint VDLOff)
             {
                 ID = (ushort)((br.BaseStream.Position - VDLOff) / 0x40);
                 Byte1 = br.ReadByte();
@@ -545,11 +543,9 @@ namespace EndlessOceanFilesConverter
                 Rotation.Xyz = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
                 Rotation.W = br.ReadSingle();
                 Scale = (br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
-                MeshName = Program.ReadStrAdv(br, 0x10);
-                if (Rotation.X == 0 && Rotation.Y == 0 && Rotation.Z == 0 && Rotation.W == 0)
-                {
-                    Rotation.W = 1F;
-                }
+                MeshName = Encoding.GetEncoding("ISO-8859-1").GetString(br.ReadBytes(0x10)).Trim('\0'); //fix for eo1/stage/zoom/s03/s03z0121.mdl
+                if (Rotation.Length == 0)
+                    Rotation = Quaternion.Identity;
             }
         }
     }

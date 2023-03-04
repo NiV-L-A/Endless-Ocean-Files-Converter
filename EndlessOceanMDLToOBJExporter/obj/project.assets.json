@@ -29,10 +29,14 @@
           "Microsoft.NETCore.Platforms": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {}
+          "ref/netstandard2.0/_._": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {}
+          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll": {
@@ -47,10 +51,14 @@
           "System.Runtime.CompilerServices.Unsafe": "5.0.0"
         },
         "compile": {
-          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {}
+          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {}
+          "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "System.Drawing.Common/5.0.2": {
@@ -59,10 +67,14 @@
           "Microsoft.Win32.SystemEvents": "5.0.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
+          "ref/netcoreapp3.0/System.Drawing.Common.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp3.0/System.Drawing.Common.dll": {}
+          "lib/netcoreapp3.0/System.Drawing.Common.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll": {
@@ -78,10 +90,14 @@
       "System.Runtime.CompilerServices.Unsafe/5.0.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -246,26 +262,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Roberto\\.nuget\\packages\\": {}
+    "C:\\Users\\roberto.pagano\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
+      "projectUniqueName": "C:\\Users\\roberto.pagano\\Documents\\GitHub\\Endless-Ocean-Files-Converter\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
       "projectName": "EndlessOceanFilesConverter",
-      "projectPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
-      "packagesPath": "C:\\Users\\Roberto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Roberto\\Documents\\GitHub\\Endless-Ocean-MDL-to-OBJ-2\\EndlessOceanMDLToOBJExporter\\obj\\",
+      "projectPath": "C:\\Users\\roberto.pagano\\Documents\\GitHub\\Endless-Ocean-Files-Converter\\EndlessOceanMDLToOBJExporter\\EndlessOceanFilesConverter.csproj",
+      "packagesPath": "C:\\Users\\roberto.pagano\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\roberto.pagano\\Documents\\GitHub\\Endless-Ocean-Files-Converter\\EndlessOceanMDLToOBJExporter\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Roberto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\roberto.pagano\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Users\\Roberto\\Downloads\\Build_x64": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -303,7 +319,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -312,7 +329,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

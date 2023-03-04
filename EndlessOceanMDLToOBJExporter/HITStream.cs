@@ -189,7 +189,7 @@ namespace EndlessOceanFilesConverter
 
         public static void TransformVertices(List<Vector3> Vec3, Vector3 TransCorrection, Quaternion RotCorrection, bool IsRod, float TransCol, float TransRow)
         {
-            Matrix4 TRSMat = Matrix4.CreateFromQuaternion(Program.QuatIdentity);
+            Matrix4 TRSMat = Matrix4.Identity;
             TRSMat *= Matrix4.CreateFromQuaternion(RotCorrection);
             TRSMat *= Matrix4.CreateTranslation(new(TransCorrection));
             for (int i = 0; i < Vec3.Count; i++)
