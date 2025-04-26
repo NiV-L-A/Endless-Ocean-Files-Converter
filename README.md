@@ -1,3 +1,5 @@
+# This repository is deprecated.<br>Please, use [EndlessOceanFilesConverter](https://github.com/NiV-L-A/EndlessOceanFilesConverter) instead.
+--------
 ## INFO ##
 - Endless Ocean Files Converter
 - Authors: NiV, MDB
